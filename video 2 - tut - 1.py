@@ -1,13 +1,15 @@
-from flask import Flask
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
 @app.route("/")    # this is one end point
-def hello_world():
-    return "<p>Hello, World!</p>"
+def index():
+    return render_template('index.html')
 
-@app.route("/harry")        # this is another end point
-def hello_harry():
-    return "<p>Hello Harry, Good Afternoon!</p>"
+
+@app.route("/about")        # this is another end point
+def about():
+    name = "Harry"
+    return render_template('about.html',NAME = name)
 
 app.run(debug=True)
