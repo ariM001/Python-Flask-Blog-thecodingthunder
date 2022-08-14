@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, flash, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail    # pip install flask-mail
 import json
@@ -9,6 +9,7 @@ with open('config.json', 'r') as c:
     params = json.load(c)['params']
 
 app = Flask(__name__)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 app.config.update(
     MAIL_SERVER='smtp.gmail.com',
@@ -75,18 +76,32 @@ def contact():
         phone_num = request.form.get('phone_num')
         mes = request.form.get('mes')
 
+        if len(name) < 3 or len(name) > 20:
+            flash('Name is too short or too lengthy!', 'warning')
+            return redirect('/contact')
+        if len(email) < 6 or len(email) > 25:
+            flash('Email is too short or too lengthy!', 'warning')
+            return redirect('/contact')
+        if len(phone_num) < 10 or len(phone_num) > 15:
+            flash('Phone number is too short or too lengthy!', 'warning')
+            return redirect('/contact')
+        if len(mes) < 8 or len(mes) > 100:
+            flash('Message is too short or too lengthy!', 'warning')
+            return redirect('/contact')
+
         entry = Contacts(name=name, email=email,
                          phone_num=phone_num, mes=mes, date=datetime.now())
 
         db.session.add(entry)
         db.session.commit()
+        flash('Your message has been sent successfully!', 'info')
 
         # mail.send_message('TheCodingThunder: New message from ' + name,
         #                   sender=email,
         #                   recipients=[params['gmail_user']],
         #                   body=mes,)
 
-        return redirect('/')
+        return redirect('/contact')
 
     return render_template('contact.html', params=params)
 
