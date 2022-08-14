@@ -29,6 +29,16 @@ else:
 db = SQLAlchemy(app)
 
 
+class Posts(db.Model):
+    sno = db.Column(db.Integer, primary_key=True)
+    slug = db.Column(db.String(100),  nullable=False)
+    title = db.Column(db.String(), nullable=False)
+    author = db.Column(db.String(), nullable=False)
+    content = db.Column(db.String(),  nullable=False)
+    date = db.Column(db.String(12), nullable=True)
+    img_file = db.Column(db.String(25), nullable=True)
+
+
 class Contacts(db.Model):
     sno = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), nullable=False)
@@ -40,7 +50,8 @@ class Contacts(db.Model):
 
 @app.route("/")
 def home():
-    return render_template('index.html', params=params)
+    all_posts = Posts.query.all()
+    return render_template('index.html', params=params, all_posts=all_posts)
 
 
 @app.route("/about")
@@ -48,9 +59,10 @@ def about():
     return render_template('about.html', params=params)
 
 
-@app.route("/post")
-def post():
-    return render_template('post.html', params=params)
+@app.route("/post/<string:post_slug>", methods=['GET'])
+def post_route(post_slug):
+    post = Posts.query.filter_by(slug=post_slug).first()
+    return render_template('post.html', params=params, post=post)
 
 
 @app.route("/contact", methods=['GET', 'POST'])
