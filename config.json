@@ -1,0 +1,13 @@
+{
+    "params": 
+    {
+        "local_server": "True",
+        "local_uri": "mysql://root:@localhost/codingthunder",
+        "prod_uri": "mysql://{username}:{password}@localhost/{db_name}",
+        "twitter_url":"https://www.twitter.com",
+        "fb_url":"https://www.facebook.com",
+        "github_url":"https://www.github.com",
+        "blog_name":"The Coding Thunder",
+        "tag_line":"A Blog Liked By Programmers"
+    }
+}
