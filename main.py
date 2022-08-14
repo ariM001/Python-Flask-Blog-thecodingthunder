@@ -31,12 +31,13 @@ db = SQLAlchemy(app)
 
 class Posts(db.Model):
     sno = db.Column(db.Integer, primary_key=True)
-    slug = db.Column(db.String(100),  nullable=False)
+    slug = db.Column(db.String(),  nullable=False)
     title = db.Column(db.String(), nullable=False)
+    tagline = db.Column(db.String(), nullable=False)
     author = db.Column(db.String(), nullable=False)
     content = db.Column(db.String(),  nullable=False)
+    img_file = db.Column(db.String(), nullable=True)
     date = db.Column(db.String(12), nullable=True)
-    img_file = db.Column(db.String(25), nullable=True)
 
 
 class Contacts(db.Model):
@@ -50,8 +51,8 @@ class Contacts(db.Model):
 
 @app.route("/")
 def home():
-    all_posts = Posts.query.all()
-    return render_template('index.html', params=params, all_posts=all_posts)
+    all_post = Posts.query.filter_by().all()[0:params['no_of_posts']]
+    return render_template('index.html', params=params, all_post=all_post)
 
 
 @app.route("/about")

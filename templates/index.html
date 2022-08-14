@@ -25,22 +25,25 @@
 
 
             <!-- fetch posts from database using for loop  -->
-            {% for post in all_posts %}
+            {% for post in all_post %}
             <!-- Post preview-->
             <div class="post-preview">
                 <a href="/post/{{post.slug}}">
                     <h2 class="post-title">{{post.title}}</h2>
-                    <h3 class="post-subtitle">Sub title goes here</h3>
+                    <h3 class="post-subtitle">{{post.tagline}}</h3>
                 </a>
-                <p class="post-meta">
+                <p class="post-meta mb-2">
                     Posted by
                     <a href="#!">{{post.author}}</a>
                     on {{post.date}}
                 </p>
+                <p class="mt-0">
+                    {{post.content[:120]}}...
+                </p>
             </div>
-            {% endfor %}
             <!-- Divider-->
             <hr class="my-4" />
+            {% endfor %}
             
 
             <!-- Pager-->
