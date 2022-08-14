@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail    # pip install flask-mail
 import json
 from datetime import datetime
 
@@ -8,6 +9,15 @@ with open('config.json', 'r') as c:
     params = json.load(c)['params']
 
 app = Flask(__name__)
+
+app.config.update(
+    MAIL_SERVER='smtp.gmail.com',
+    MAIL_PORT='465',
+    MAIL_USE_SSL=True,
+    MAIL_USERNAME=params['gmail_user'],
+    MAIL_PASSWORD=params['gmail_password']
+)
+mail = Mail(app)
 
 local_server = params['local_server']
 
@@ -57,6 +67,12 @@ def contact():
 
         db.session.add(entry)
         db.session.commit()
+
+        # mail.send_message('TheCodingThunder: New message from ' + name,
+        #                   sender=email,
+        #                   recipients=[params['gmail_user']],
+        #                   body=mes,)
+
         return redirect('/')
 
     return render_template('contact.html', params=params)
