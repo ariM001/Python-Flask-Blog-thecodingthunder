@@ -106,4 +106,20 @@ def contact():
     return render_template('contact.html', params=params)
 
 
+@app.route("/dashboard", methods=['GET', 'POST'])
+def dashboard():
+    if request.method == "POST":
+        ad_username = request.form.get('ad_username')
+        ad_password = request.form.get('ad_password')
+        
+        if ad_username == params['admin_username'] and ad_password == params['admin_password']:
+            # redirect to admin panel
+            return ("<h2>Login Successful!</h2>")
+        else:
+            flash('Invalid Credentials!', 'warning')
+            return redirect('/dashboard')
+
+    else:
+        return render_template('login.html', params=params)
+
 app.run(debug=True)
