@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request, redirect
+from flask import Flask, flash, render_template, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail    # pip install flask-mail
 import json
@@ -9,7 +9,7 @@ with open('config.json', 'r') as c:
     params = json.load(c)['params']
 
 app = Flask(__name__)
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+app.secret_key = 'super-sectet-key'
 
 app.config.update(
     MAIL_SERVER='smtp.gmail.com',
@@ -108,18 +108,26 @@ def contact():
 
 @app.route("/dashboard", methods=['GET', 'POST'])
 def dashboard():
+    if ('user' in session and session['user'] == params['admin_username']):
+        # give access to admin page because user is already logged in
+        posts = Posts.query.all()
+        return render_template('dashboard.html', params=params, posts = posts)
+ 
+
     if request.method == "POST":
-        ad_username = request.form.get('ad_username')
-        ad_password = request.form.get('ad_password')
+        username = request.form.get('uname')
+        password = request.form.get('pass')
         
-        if ad_username == params['admin_username'] and ad_password == params['admin_password']:
-            # redirect to admin panel
-            return ("<h2>Login Successful!</h2>")
+        if (username == params['admin_username'] and password == params['admin_password']):
+            # set the session variable
+            session['user'] = username
+            posts = Posts.query.all()
+            return render_template('dashboard.html', params=params, posts = posts)
+        
         else:
             flash('Invalid Credentials!', 'warning')
             return redirect('/dashboard')
 
-    else:
-        return render_template('login.html', params=params)
+    return render_template('login.html', params=params)
 
 app.run(debug=True)

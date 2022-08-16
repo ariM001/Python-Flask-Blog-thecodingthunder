@@ -18,8 +18,8 @@
 <body>
     <main class="form-signin text-center">
         <h2>{{params['blog_name']}}</h2>
-        {% set fname = 'assets/img/' + params['login_image'] %}
-        <img class="mb-4 mt-2" src="{{url_for('static', filename = fname)}}" alt="" width="72" height="57">
+        {% set fname = 'assets/img/' + params['admin_login_image'] %}
+        <img class="mb-1 mt-4" src="{{url_for('static', filename = fname)}}" alt="" width="84" height="88">
         <h1 class="h3 mb-3 fw-normal">Admin Login</h1>
 
         <!-- flashing messages-->
@@ -36,14 +36,14 @@
 
         <form action="/dashboard" method="post">
             <div class="form-floating">
-                <input type="email" name="ad_username" class="form-control" id="floatingInput"
+                <input type="text" name="uname" class="form-control" id="uname"
                     placeholder="name@example.com" required>
-                <label for="floatingInput">Email address</label>
+                <label for="uname">Username</label>
             </div>
             <div class="form-floating mt-2">
-                <input type="password" class="form-control" id="floatingPassword" name="ad_password"
+                <input type="password" class="form-control" id="pass" name="pass"
                     placeholder="Password" required>
-                <label for="floatingPassword">Password</label>
+                <label for="pass">Password</label>
             </div>
             <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
             <p class="mt-5 mb-3 text-muted">&copy; {{params['blog_name']}} 2022–2023</p>
