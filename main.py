@@ -106,27 +106,26 @@ def contact():
     return render_template('contact.html', params=params)
 
 
-@app.route("/login", methods=['GET', 'POST'])
-def login():
+@app.route("/dashboard", methods=['GET', 'POST'])
+def dashboard():
     if ('user' in session and session['user'] == params['admin_username']):
         # give access to admin page because user is already logged in
         posts = Posts.query.all()
-        return render_template('dashboard.html', params=params, posts = posts)
- 
+        return render_template('dashboard.html', params=params, posts=posts)
 
     if request.method == "POST":
         username = request.form.get('uname')
         password = request.form.get('pass')
-        
+
         if (username == params['admin_username'] and password == params['admin_password']):
             # set the session variable
             session['user'] = username
             posts = Posts.query.all()
-            return render_template('dashboard.html', params=params, posts = posts)
-        
+            return render_template('dashboard.html', params=params, posts=posts)
+
         else:
             flash('Invalid Credentials!', 'warning')
-            return redirect('/login')
+            return redirect('/dashboard')
 
     return render_template('login.html', params=params)
 
@@ -135,7 +134,50 @@ def login():
 def logout():
     if session.get('user'):
         del session['user']
-    flash('You have successfully logged out','info')
-    return redirect('/login')
+    flash('You have successfully logged out', 'info')
+    return redirect('/dashboard')
+
+
+@app.route("/edit/<string:sno>", methods=['GET', 'POST'])
+def edit(sno):
+    # if the user is already logged in
+    if ('user' in session and session['user'] == params['admin_username']):
+        if request.method == "POST":
+            box_title = request.form.get('title')
+            box_slug = request.form.get('slug')
+            box_tagline = request.form.get('tagline')
+            box_author = request.form.get('author')
+            box_content = request.form.get('content')
+            box_image = request.form.get('image')
+
+            if sno == '0':  # adding a new post
+                post = Posts(title=box_title, slug=box_slug, tagline=box_tagline,
+                             author=box_author, content=box_content, img_file=box_image, date=datetime.now())
+                db.session.add(post)
+                db.session.commit()
+                return redirect('/dashboard')
+
+            else:   # editing an existing post
+                post = Posts.query.filter_by(sno=sno).first()
+                post.title = box_title
+                post.slug = box_slug
+                post.tagline = box_tagline
+                post.author = box_author
+                post.content = box_content
+                post.img_file = box_image
+                post.date = datetime.now()
+                db.session.commit()
+                return redirect('/edit/'+sno)
+
+
+        post = Posts.query.filter_by(sno=sno).first()
+        return render_template('edit.html', params=params, post=post, sno=sno)
+
+
+    # if the user is not logged in
+    else:
+        flash('You must login to continue', 'warning')
+        return redirect('/dashboard')
+
 
 app.run(debug=True)
