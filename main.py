@@ -106,8 +106,8 @@ def contact():
     return render_template('contact.html', params=params)
 
 
-@app.route("/dashboard", methods=['GET', 'POST'])
-def dashboard():
+@app.route("/login", methods=['GET', 'POST'])
+def login():
     if ('user' in session and session['user'] == params['admin_username']):
         # give access to admin page because user is already logged in
         posts = Posts.query.all()
@@ -126,8 +126,16 @@ def dashboard():
         
         else:
             flash('Invalid Credentials!', 'warning')
-            return redirect('/dashboard')
+            return redirect('/login')
 
     return render_template('login.html', params=params)
+
+
+@app.route('/logout')
+def logout():
+    if session.get('user'):
+        del session['user']
+    flash('You have successfully logged out','info')
+    return redirect('/login')
 
 app.run(debug=True)

@@ -34,7 +34,7 @@
         {% endif %}
         {% endwith %}
 
-        <form action="/dashboard" method="post">
+        <form action="/login" method="post">
             <div class="form-floating">
                 <input type="text" name="uname" class="form-control" id="uname"
                     placeholder="name@example.com" required>
@@ -45,7 +45,7 @@
                     placeholder="Password" required>
                 <label for="pass">Password</label>
             </div>
-            <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Login</button>
             <p class="mt-5 mb-3 text-muted">&copy; {{params['blog_name']}} 2022–2023</p>
         </form>
     </main>
