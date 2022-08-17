@@ -5,6 +5,7 @@ import json
 from datetime import datetime
 import os
 from werkzeug.utils import secure_filename
+from math import ceil
 
 
 with open('config.json', 'r') as c:
@@ -55,8 +56,32 @@ class Contacts(db.Model):
 
 @app.route("/")
 def home():
-    all_post = Posts.query.filter_by().all()[0:params['no_of_posts']]
-    return render_template('index.html', params=params, all_post=all_post)
+    all_post = Posts.query.filter_by().all()
+    last = ceil(len(all_post) / int(params['no_of_posts']))
+
+    page = request.args.get('page')
+    if (not str(page).isnumeric()):
+        page = 1
+    page = int(page)
+    all_post = all_post[(page-1)*int(params['no_of_posts']): (page-1)
+                        * int(params['no_of_posts'])+int(params['no_of_posts'])]
+    # pagination logic
+    # first page
+    if page == 1:
+        prev = "#"
+        next = "/?page=" + str(page+1)
+
+    # last page - prev - page-1 , next - #
+    elif (page == last):
+        prev = "/?page=" + str(page-1)
+        next = "#"
+
+    # middle page - prev-page-1, next - page+1
+    else:
+        prev = "/?page=" + str(page-1)
+        next = "/?page=" + str(page+1)
+
+    return render_template('index.html', params=params, all_post=all_post, prev=prev, page=page, next=next)
 
 
 @app.route("/about")
@@ -182,13 +207,13 @@ def edit(sno):
         return redirect('/dashboard')
 
 
-
 @app.route("/uploader", methods=['GET', 'POST'])
 def uploader():
     if ('user' in session and session['user'] == params['admin_username']):
         if request.method == "POST":
             f = request.files['file1']
-            f.save(os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)))
+            f.save(os.path.join(
+                app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
             flash('File Uploaded Successfully!', 'info')
             return redirect('/dashboard')
 

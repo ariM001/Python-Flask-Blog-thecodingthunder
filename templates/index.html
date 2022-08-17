@@ -19,7 +19,7 @@
 </header>
 
 <!-- Main Content-->
-<div class="container px-4 px-lg-5">
+<div class="container px-4 px-lg-5 mb-4">
     <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
 
@@ -38,17 +38,20 @@
                     on {{post.date}}
                 </p>
                 <p class="mt-0">
-                    {{post.content[:120]}}...
+                    {{post.content[:240]}}...
                 </p>
             </div>
             <!-- Divider-->
             <hr class="my-4" />
             {% endfor %}
-            
+
 
             <!-- Pager-->
-            <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older
-                    Posts →</a></div>
+            <div class="content-center">
+                <a class="btn btn-primary text-uppercase me-4" href="{{prev}}">&larr; Previous</a>
+                <span>Page : {{page}}</span>
+                <a class="btn btn-primary text-uppercase ms-4" href="{{next}}">Next &rarr;</a>
+            </div>
         </div>
     </div>
 </div>
