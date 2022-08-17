@@ -193,7 +193,7 @@ def uploader():
             return redirect('/dashboard')
 
 
-@app.route("/delete/<string:sno>", methods=['GET', 'POST'])
+@app.route("/delete/<string:sno>", methods=['GET', 'POST'])   # video 18
 def delete(sno):
     if ('user' in session and session['user'] == params['admin_username']):
         if request.method == "POST":
