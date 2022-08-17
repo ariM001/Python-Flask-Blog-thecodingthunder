@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail    # pip install flask-mail
 import json
 from datetime import datetime
+import os
+from werkzeug.utils import secure_filename
 
 
 with open('config.json', 'r') as c:
@@ -10,6 +12,7 @@ with open('config.json', 'r') as c:
 
 app = Flask(__name__)
 app.secret_key = 'super-sectet-key'
+app.config['UPLOAD_FOLDER'] = params['upload_location']
 
 app.config.update(
     MAIL_SERVER='smtp.gmail.com',
@@ -132,8 +135,7 @@ def dashboard():
 
 @app.route('/logout')
 def logout():
-    if session.get('user'):
-        del session['user']
+    session.pop('user')
     flash('You have successfully logged out', 'info')
     return redirect('/dashboard')
 
@@ -155,6 +157,7 @@ def edit(sno):
                              author=box_author, content=box_content, img_file=box_image, date=datetime.now())
                 db.session.add(post)
                 db.session.commit()
+                flash('Post Added Successfully!', 'info')
                 return redirect('/dashboard')
 
             else:   # editing an existing post
@@ -167,17 +170,40 @@ def edit(sno):
                 post.img_file = box_image
                 post.date = datetime.now()
                 db.session.commit()
+                flash('Changes Saved Successfully!', 'info')
                 return redirect('/edit/'+sno)
-
 
         post = Posts.query.filter_by(sno=sno).first()
         return render_template('edit.html', params=params, post=post, sno=sno)
-
 
     # if the user is not logged in
     else:
         flash('You must login to continue', 'warning')
         return redirect('/dashboard')
+
+
+
+@app.route("/uploader", methods=['GET', 'POST'])
+def uploader():
+    if ('user' in session and session['user'] == params['admin_username']):
+        if request.method == "POST":
+            f = request.files['file1']
+            f.save(os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)))
+            flash('File Uploaded Successfully!', 'info')
+            return redirect('/dashboard')
+
+
+@app.route("/delete/<string:sno>", methods=['GET', 'POST'])
+def delete(sno):
+    if ('user' in session and session['user'] == params['admin_username']):
+        if request.method == "POST":
+            confirmpass = request.form.get('confirmpass')
+            if confirmpass == params['admin_password']:
+                post_del = Posts.query.filter_by(sno=sno).first()
+                db.session.delete(post_del)
+                db.session.commit()
+                flash('Post deleted successfully', 'warning')
+                return redirect('/dashboard')
 
 
 app.run(debug=True)

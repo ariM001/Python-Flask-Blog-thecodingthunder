@@ -18,6 +18,8 @@
         "no_of_posts":3,
 
         "admin_username":"harry123",
-        "admin_password":"harry"
+        "admin_password":"harry",
+
+        "upload_location":"G:\\G\\Python Flask Tutorials\\static"
     }
 }
