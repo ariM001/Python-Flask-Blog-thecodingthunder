@@ -1,6 +1,6 @@
 from flask import Flask, flash, render_template, request, redirect, session
-from flask_sqlalchemy import SQLAlchemy
-from flask_mail import Mail    # pip install flask-mail
+from flask_sqlalchemy import SQLAlchemy # pip3 install flask-sqlalchemy
+from flask_mail import Mail    # pip3 install flask-mail
 import json
 from datetime import datetime
 import os
