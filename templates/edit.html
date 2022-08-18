@@ -6,9 +6,9 @@
 
 <!-- Page Header--> 
 {% if post %}
-<header class="masthead"
+<header class="masthead mb-0"
     style="background-image: url('   {{url_for('static', filename = 'assets/img/editpost.png')}}    ')">
-    {% else %}<header class="masthead"
+    {% else %}<header class="masthead mb-0"
         style="background-image: url('{{url_for('static', filename = 'assets/img/addnewpost.png')}}')">
         {% endif %}
 
@@ -32,8 +32,8 @@
   {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
   {% for category, message in messages %}
-  <div class="alert alert-{{ category }} alert-dismissible fade show container" role="alert">
-    <strong>Message!</strong> {{ message }}
+  <div class="alert alert-{{ category }} alert-dismissible fade show d-flex justify-content-center" role="alert">
+    <strong>{{ message }}</strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 {% endfor %}
@@ -42,21 +42,20 @@
 
 
     <!-- Main Content-->
-    <div class="container mb-4">
-        <h2>Basic Actions</h2>
-        <p>
+    <div class="container my-4">
+        <h2 class="mb-4">Basic Actions</h2>
+        <div>
             {% if post %}
-            <a href="/post/{{post.slug}}" target="_blank"><button class="btn btn-sm btn-primary p-2 me-2">View Post in
-                    Blog</button></a>
+            <a href="/post/{{post.slug}}" target="_blank"><button class="btn btn-sm btn-primary p-2 me-2">View Post in Blog</button></a>
             {% endif %}
             <a href="/dashboard"><button class="btn btn-sm btn-warning p-2 me-2">Admin Dashboard</button></a>
             <a href="/logout"><button class="btn btn-sm btn-danger p-2">Logout</button></a>
-        </p>
+        </div>
         <hr>
 
         {% if post %}
-        <h2>Edit Your Post</h2>
-        {% else %} <h2>Add Your Post</h2>
+        <h2 class="my-4">Edit Your Post</h2>
+        {% else %} <h2 class="my-4">Add Your Post</h2>
         {% endif %}
         <form action="/edit/{{sno}}" method="post">
             <div class="form-floating">

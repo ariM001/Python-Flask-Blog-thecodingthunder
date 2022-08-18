@@ -5,7 +5,7 @@
 {% block body %}
 
 <!-- Page Header-->
-<header class="masthead"
+<header class="masthead mb-0"
     style="background-image: url('   {{url_for('static', filename = 'assets/img/adminpanel-bg.jpg')}}    ')">
     <div class="container position-relative px-4 px-lg-5">
       <div class="row gx-4 gx-lg-5 justify-content-center">
@@ -23,8 +23,8 @@
   {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
   {% for category, message in messages %}
-  <div class="alert alert-{{ category }} alert-dismissible fade show container" role="alert">
-    <strong>Message!</strong> {{ message }}
+  <div class="alert alert-{{ category }} alert-dismissible fade show d-flex justify-content-center" role="alert">
+    <strong>{{ message }}</strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 {% endfor %}
@@ -32,8 +32,8 @@
 {% endwith %}
 
 
+<!--Delete Modal -->
 {% for post in posts %}
- <!--Delete Modal -->
  <div class="modal fade" id="deletemodal{{post.sno}}" tabindex="-1" aria-labelledby="deletemodal{{post.sno}}" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -58,15 +58,15 @@
 
 
 <!-- Main Content-->
-<div class="container">
-  <h2>Basic Actions</h2>
+<div class="container mt-4">
+  <h2 class="my-4">Basic Actions</h2>
     <div>
       <a href="/edit/0"><button class="btn btn-sm btn-success p-2 me-2">Add a new post</button></a>
       <a href="/logout"><button class="btn btn-sm btn-danger p-2">Logout</button></a>
     </div>
     <hr>
 
-  <h2>File Uploader</h2>
+  <h2 class="my-4">File Uploader</h2>
   <div>
   <form action="/uploader"method = "post" enctype="multipart/form-data">
     <input type="File" name = "file1">
@@ -75,7 +75,7 @@
     </div>
     <hr>
 
-<h2 class="mb-4">Your Posts</h2> 
+<h2 class="my-4">Your Posts</h2> 
   <table class="table">
     <thead>
       <tr>

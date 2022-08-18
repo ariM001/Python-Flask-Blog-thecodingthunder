@@ -105,16 +105,16 @@ def contact():
         mes = request.form.get('mes')
 
         if len(name) < 3 or len(name) > 20:
-            flash('Name is too short or too lengthy!', 'warning')
+            flash('Name is too short or too lengthy!', 'danger')
             return redirect('/contact')
         if len(email) < 6 or len(email) > 25:
-            flash('Email is too short or too lengthy!', 'warning')
+            flash('Email is too short or too lengthy!', 'danger')
             return redirect('/contact')
         if len(phone_num) < 10 or len(phone_num) > 15:
-            flash('Phone number is too short or too lengthy!', 'warning')
+            flash('Phone number is too short or too lengthy!', 'danger')
             return redirect('/contact')
         if len(mes) < 8 or len(mes) > 100:
-            flash('Message is too short or too lengthy!', 'warning')
+            flash('Message is too short or too lengthy!', 'danger')
             return redirect('/contact')
 
         entry = Contacts(name=name, email=email,
@@ -122,7 +122,7 @@ def contact():
 
         db.session.add(entry)
         db.session.commit()
-        flash('Your message has been sent successfully!', 'info')
+        flash('Your message has been sent successfully!', 'success')
 
         # mail.send_message('TheCodingThunder: New message from ' + name,
         #                   sender=email,
@@ -149,10 +149,11 @@ def dashboard():
             # set the session variable
             session['user'] = username
             posts = Posts.query.all()
+            flash('Logged in successfully!', 'success')
             return render_template('dashboard.html', params=params, posts=posts)
 
         else:
-            flash('Invalid Credentials!', 'warning')
+            flash('Invalid Credentials!', 'danger')
             return redirect('/dashboard')
 
     return render_template('login.html', params=params)
@@ -161,7 +162,7 @@ def dashboard():
 @app.route('/logout')
 def logout():
     session.pop('user')
-    flash('You have successfully logged out', 'info')
+    flash('Successfully logged out', 'success')
     return redirect('/dashboard')
 
 
@@ -182,7 +183,7 @@ def edit(sno):
                              author=box_author, content=box_content, img_file=box_image, date=datetime.now())
                 db.session.add(post)
                 db.session.commit()
-                flash('Post Added Successfully!', 'info')
+                flash('Post Added Successfully!', 'success')
                 return redirect('/dashboard')
 
             else:   # editing an existing post
@@ -195,7 +196,7 @@ def edit(sno):
                 post.img_file = box_image
                 post.date = datetime.now()
                 db.session.commit()
-                flash('Changes Saved Successfully!', 'info')
+                flash('Changes Saved Successfully!', 'success')
                 return redirect('/edit/'+sno)
 
         post = Posts.query.filter_by(sno=sno).first()
@@ -203,7 +204,7 @@ def edit(sno):
 
     # if the user is not logged in
     else:
-        flash('You must login to continue', 'warning')
+        flash('You must login to continue', 'danger')
         return redirect('/dashboard')
 
 
@@ -214,7 +215,7 @@ def uploader():
             f = request.files['file1']
             f.save(os.path.join(
                 app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
-            flash('File Uploaded Successfully!', 'info')
+            flash('File Uploaded Successfully!', 'success')
             return redirect('/dashboard')
 
 
@@ -227,7 +228,7 @@ def delete(sno):
                 post_del = Posts.query.filter_by(sno=sno).first()
                 db.session.delete(post_del)
                 db.session.commit()
-                flash('Post deleted successfully', 'warning')
+                flash('Post deleted successfully', 'success')
                 return redirect('/dashboard')
 
 
